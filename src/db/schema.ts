@@ -41,15 +41,17 @@ export const verificationTokens = pgTable('verificationToken', {
   primaryKey({ columns: [vt.identifier, vt.token] }),
 ]);
 
-// --- Subscription table (Polar.sh billing) ---
+// --- Subscription table (Lemon Squeezy billing) ---
 
 export const subscriptions = pgTable('subscription', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  polarCustomerId: text('polar_customer_id'),
-  polarSubscriptionId: text('polar_subscription_id').unique(),
+  lsCustomerId: text('ls_customer_id'),
+  lsSubscriptionId: text('ls_subscription_id').unique(),
+  variantId: text('variant_id'),
   status: text('status').notNull().default('active'),
   currentPeriodEnd: timestamp('current_period_end'),
+  customerPortalUrl: text('customer_portal_url'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

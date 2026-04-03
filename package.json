@@ -12,9 +12,8 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.1",
+    "@lemonsqueezy/lemonsqueezy.js": "^4.0.0",
     "@neondatabase/serverless": "^1.0.2",
-    "@polar-sh/nextjs": "^0.9.5",
-    "@polar-sh/sdk": "^0.47.0",
     "drizzle-orm": "^0.45.2",
     "next": "16.2.2",
     "next-auth": "^5.0.0-beta.30",

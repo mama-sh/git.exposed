@@ -15,7 +15,7 @@ export async function walk(dir: string): Promise<string[]> {
   const files: string[] = [];
   const entries = await readdir(dir, { withFileTypes: true });
   for (const e of entries) {
-    if (SKIP_DIRS.has(e.name)) continue;
+    if (SKIP_DIRS.has(e.name) || e.isSymbolicLink()) continue;
     const full = path.join(dir, e.name);
     if (e.isDirectory()) files.push(...await walk(full));
     else if (CODE_EXTS.has(path.extname(e.name))) files.push(full);

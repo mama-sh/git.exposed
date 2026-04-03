@@ -31,7 +31,7 @@ export async function POST(request: Request) {
   const [scan] = await db.insert(scans).values({
     repoOwner: info.owner,
     repoName: info.repo,
-    repoUrl: url,
+    repoUrl: `https://github.com/${info.owner}/${info.repo}`,
   }).returning();
 
   if (SCANNER_URL) {

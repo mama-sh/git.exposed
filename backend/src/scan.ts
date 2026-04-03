@@ -62,7 +62,7 @@ export async function runDeepScan(scanId: string, owner: string, repo: string) {
       completedAt: new Date(),
     }).where(eq(scans.id, scanId));
   } catch (error) {
-    console.error('Deep scan failed:', error);
+    console.error('Deep scan failed:', error instanceof Error ? error.message : 'Unknown error');
     await db.update(scans).set({ status: 'failed' }).where(eq(scans.id, scanId));
   } finally {
     if (dir) await rm(dir, { recursive: true, force: true }).catch(() => {});

@@ -1,19 +1,33 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { timingSafeEqual } from 'node:crypto';
 import { runDeepScan } from './scan';
+
+const SCAN_SECRET = process.env.SCAN_SECRET;
+if (!SCAN_SECRET) throw new Error('SCAN_SECRET environment variable must be set');
+
+const isDev = process.env.NODE_ENV === 'development';
+const allowedOrigins = [
+  'https://git.exposed',
+  'https://viral-vibecoding.vercel.app',
+  ...(isDev ? ['http://localhost:3000'] : []),
+];
 
 const app = new Hono();
 
-app.use('*', cors({
-  origin: ['https://git.exposed', 'https://viral-vibecoding.vercel.app', 'http://localhost:3000'],
-}));
+app.use('*', cors({ origin: allowedOrigins }));
 
 app.get('/health', (c) => c.json({ status: 'ok' }));
 
+function verifyAuth(header: string | undefined): boolean {
+  const expected = `Bearer ${SCAN_SECRET}`;
+  if (!header || header.length !== expected.length) return false;
+  return timingSafeEqual(Buffer.from(header), Buffer.from(expected));
+}
+
 app.post('/scan', async (c) => {
-  const secret = c.req.header('Authorization');
-  if (secret !== `Bearer ${process.env.SCAN_SECRET}`) {
+  if (!verifyAuth(c.req.header('Authorization'))) {
     return c.json({ error: 'Unauthorized' }, 401);
   }
 

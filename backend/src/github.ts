@@ -22,18 +22,31 @@ export function parseGitHubUrl(url: string): RepoInfo | null {
   }
 }
 
+const MAX_REPO_SIZE = 100 * 1024 * 1024; // 100MB
+const FETCH_TIMEOUT = 30000; // 30s
+
 async function fetchAndExtract(url: string, dir: string): Promise<void> {
-  const res = await fetch(url, { redirect: 'follow' });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
 
-  const webStream = res.body;
-  if (!webStream) throw new Error('No response body');
+  try {
+    const res = await fetch(url, { redirect: 'follow', signal: controller.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-  const nodeStream = Readable.fromWeb(webStream as any);
-  await pipeline(
-    nodeStream,
-    tar.x({ cwd: dir, strip: 1 }),
-  );
+    const contentLength = Number(res.headers.get('content-length') || 0);
+    if (contentLength > MAX_REPO_SIZE) throw new Error('Repository too large');
+
+    const webStream = res.body;
+    if (!webStream) throw new Error('No response body');
+
+    const nodeStream = Readable.fromWeb(webStream as any);
+    await pipeline(
+      nodeStream,
+      tar.x({ cwd: dir, strip: 1, filter: (_path, entry) => !('type' in entry && entry.type === 'SymbolicLink') }),
+    );
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export async function downloadRepo(owner: string, repo: string): Promise<string> {

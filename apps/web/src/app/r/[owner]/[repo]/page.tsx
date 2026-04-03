@@ -168,7 +168,7 @@ export default async function ReportPage({ params }: Props) {
         {scanFindings.length === 0 ? (
           <div className="text-center py-12 text-green-500">
             <h2 className="text-2xl font-bold mb-2">No issues found!</h2>
-            <p className="text-slate-400">Your app passed all checks. Nice vibes.</p>
+            <p className="text-slate-400">Your app passed all checks. Ship with confidence.</p>
           </div>
         ) : (
           <div className="space-y-3">

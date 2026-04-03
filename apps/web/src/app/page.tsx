@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
 
@@ -9,8 +9,13 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [scanCount, setScanCount] = useState<number | null>(null);
   const router = useRouter();
   const { data: session } = useSession();
+
+  useEffect(() => {
+    fetch('/api/scan/count').then((r) => r.json()).then((d) => setScanCount(d.count)).catch(() => {});
+  }, []);
 
   async function handleScan(e: React.FormEvent) {
     e.preventDefault();
@@ -51,19 +56,20 @@ export default function Home() {
     }
   }
 
-  const productId = process.env.NEXT_PUBLIC_POLAR_PRODUCT_ID;
-
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 flex flex-col items-center justify-center px-6">
       <main className="max-w-2xl w-full text-center">
         <h1 className="text-5xl font-extrabold tracking-tight mb-4">
           git.<span className="text-red-500">exposed</span>
         </h1>
-        <p className="text-xl text-slate-400 mb-10">
-          Is your code exposed? Scan any GitHub repo in seconds.
+        <p className="text-xl text-slate-400 mb-2">
+          Find exposed secrets and vulnerabilities in any GitHub repo.
+        </p>
+        <p className="text-sm text-slate-500 mb-10">
+          150+ secret patterns &middot; 3,000+ security rules &middot; Real CVE database
         </p>
 
-        <form onSubmit={handleScan} className="flex gap-3 mb-6">
+        <form onSubmit={handleScan} className="flex gap-3 mb-4">
           <input
             type="url"
             value={url}
@@ -89,6 +95,20 @@ export default function Home() {
           </button>
         </form>
 
+        {/* Quick-start examples — reduce activation energy */}
+        <div className="flex gap-2 justify-center flex-wrap mb-6">
+          <span className="text-xs text-slate-600">Try:</span>
+          {['expressjs/express', 'facebook/react', 'vercel/next.js'].map((repo) => (
+            <button
+              key={repo}
+              onClick={() => { setUrl(`https://github.com/${repo}`); }}
+              className="text-xs text-slate-500 hover:text-red-400 transition-colors"
+            >
+              {repo}
+            </button>
+          ))}
+        </div>
+
         {error && (
           <div className="mb-4">
             <p className="text-red-400 text-sm">{error}</p>
@@ -97,7 +117,7 @@ export default function Home() {
                 onClick={() => signIn('github')}
                 className="mt-2 text-sm text-red-400 hover:text-red-300 underline"
               >
-                Sign in with GitHub →
+                Sign in with GitHub
               </button>
             )}
           </div>
@@ -105,11 +125,14 @@ export default function Home() {
 
         {showUpgrade && (
           <div className="mb-4 bg-slate-800/50 border border-amber-500/30 rounded-lg p-4">
-            <p className="text-amber-400 text-sm font-medium mb-2">
-              🔒 Private repo scanning requires a Pro subscription
+            <p className="text-amber-400 text-sm font-medium mb-1">
+              Private repos need Pro to scan
+            </p>
+            <p className="text-slate-500 text-xs mb-3">
+              Exposed credentials in private repos are the #1 cause of data breaches.
             </p>
             <a
-              href={`/api/checkout?products=${productId}`}
+              href="/api/checkout"
               className="inline-block bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-sm px-4 py-2 rounded-lg transition-colors"
             >
               Upgrade to Pro — $19/mo
@@ -118,7 +141,10 @@ export default function Home() {
         )}
 
         <p className="text-sm text-slate-500">
-          Public repos free &middot; Private repos with Pro &middot; Open source
+          Free for public repos &middot; No signup required
+          {scanCount !== null && (
+            <span> &middot; {scanCount.toLocaleString()} repos scanned</span>
+          )}
         </p>
       </main>
     </div>

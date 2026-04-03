@@ -28,7 +28,7 @@ export async function GET(_req: NextRequest) {
   const session = await auth();
   if (!session?.user?.email) {
     // Redirect to sign-in, then back to checkout after auth
-    return NextResponse.redirect(new URL('/api/auth/signin?callbackUrl=/api/checkout', _req.url));
+    return NextResponse.redirect(new URL('/signin?callbackUrl=/api/checkout', _req.url));
   }
 
   const url = await createCheckoutUrl(session.user.email, session.user.name, session.user.id!);

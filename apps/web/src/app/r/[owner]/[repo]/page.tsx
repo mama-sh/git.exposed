@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ScoreCircle } from '@/components/score-circle';
 import { FindingCard } from '@/components/finding-card';
 import { CopyButton } from '@/components/copy-button';
+import { FixButton } from '@/components/fix-button';
 import { AutoScan } from '@/components/auto-scan';
 import { PrivateRepoGate } from '@/components/private-repo-gate';
 import { auth } from '@/lib/auth';
@@ -128,6 +129,17 @@ export default async function ReportPage({ params }: Props) {
 
   const scanFindings = await db.select().from(findings).where(eq(findings.scanId, scan.id));
 
+  // Check Pro status for Fix button
+  const session = await auth();
+  let isPro = false;
+  if (session?.user?.id) {
+    const [sub] = await db.select()
+      .from(subscriptions)
+      .where(and(eq(subscriptions.userId, session.user.id), eq(subscriptions.status, 'active')))
+      .limit(1);
+    isPro = !!sub;
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200">
       <div className="max-w-3xl mx-auto px-6 py-12">
@@ -171,6 +183,19 @@ export default async function ReportPage({ params }: Props) {
               />
             ))}
           </div>
+        )}
+
+        {scanFindings.length > 0 && (
+          <FixButton
+            scanId={scan.id}
+            findings={scanFindings.map((f) => ({
+              id: f.id,
+              severity: f.severity,
+              title: f.title,
+              file: f.file,
+            }))}
+            isPro={isPro}
+          />
         )}
 
         <div className="mt-10 p-5 rounded-lg border border-slate-800 bg-slate-900/50">

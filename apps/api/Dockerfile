@@ -15,10 +15,26 @@ RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/
 RUN curl -sSL https://github.com/opengrep/opengrep/releases/download/v1.16.5/opengrep_manylinux_x86 -o /usr/local/bin/opengrep \
     && chmod +x /usr/local/bin/opengrep
 
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
+
+# Copy workspace config
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc ./
+
+# Copy package.json files for all workspaces (for install)
+COPY packages/shared/package.json packages/shared/package.json
+COPY apps/api/package.json apps/api/package.json
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY packages/shared/ packages/shared/
+COPY apps/api/ apps/api/
+
+WORKDIR /app/apps/api
 
 EXPOSE 4000
 CMD ["npx", "tsx", "src/index.ts"]

@@ -4,13 +4,21 @@ import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import { getRealDb } from '@repo/shared/db';
 import { users, accounts, sessions, verificationTokens } from '@repo/shared/db/schema';
 
+// Lazy adapter — defers DB connection until first auth call (not build time)
+const lazyAdapter = new Proxy({} as ReturnType<typeof DrizzleAdapter>, {
+  get(_, prop) {
+    const real = DrizzleAdapter(getRealDb() as any, {
+      usersTable: users,
+      accountsTable: accounts,
+      sessionsTable: sessions,
+      verificationTokensTable: verificationTokens,
+    } as any);
+    return (real as any)[prop];
+  },
+});
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(getRealDb() as any, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  } as any),
+  adapter: lazyAdapter,
   providers: [
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,

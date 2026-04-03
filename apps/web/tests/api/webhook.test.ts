@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import crypto from 'node:crypto';
 
 // Mock DB before importing the route
-vi.mock('@/db', () => ({
+vi.mock('@repo/shared/db', () => ({
   db: {
     select: vi.fn(),
     update: vi.fn(),
@@ -10,7 +10,7 @@ vi.mock('@/db', () => ({
   },
 }));
 
-vi.mock('@/db/schema', () => ({
+vi.mock('@repo/shared/db/schema', () => ({
   subscriptions: { lsSubscriptionId: 'ls_subscription_id', userId: 'user_id' },
   users: { email: 'email' },
 }));
@@ -20,7 +20,7 @@ vi.mock('drizzle-orm', () => ({
 }));
 
 import { POST } from '@/app/api/webhook/lemonsqueezy/route';
-import { db } from '@/db';
+import { db } from '@repo/shared/db';
 
 function makeSignature(body: string, secret: string): string {
   return crypto.createHmac('sha256', secret).update(body).digest('hex');

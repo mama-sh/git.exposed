@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseGitHubUrl, downloadRepo } from '@/scanner/github';
+import { parseGitHubUrl, downloadRepo } from '@repo/shared/github';
 import { existsSync } from 'node:fs';
 import { rm } from 'node:fs/promises';
 

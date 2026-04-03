@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { calculateScore, getGrade } from '@/scanner/scoring';
-import type { Finding } from '@/scanner/types';
+import { calculateScore, getGrade } from '@repo/shared/scoring';
+import type { Finding } from '@repo/shared/types';
 
 function f(severity: Finding['severity']): Finding {
   return { checkName: 'test', severity, title: 'T', description: 'D', file: 'f.js' };

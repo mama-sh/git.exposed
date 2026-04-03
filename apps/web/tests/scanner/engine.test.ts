@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { scan } from '@/scanner/engine';
-import type { Check, Finding } from '@/scanner/types';
+import type { Check, Finding } from '@repo/shared/types';
 
 describe('scan', () => {
   it('runs all checks and returns aggregated findings', async () => {

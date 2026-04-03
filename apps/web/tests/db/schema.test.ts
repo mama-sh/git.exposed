@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { scans, findings } from '@/db/schema';
+import { scans, findings } from '@repo/shared/db/schema';
 
 describe('database schema', () => {
   it('scans table has required columns', () => {

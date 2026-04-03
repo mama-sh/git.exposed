@@ -4,13 +4,13 @@ vi.mock('@/lib/auth', () => ({
   auth: vi.fn(),
 }));
 
-vi.mock('@/db', () => ({
+vi.mock('@repo/shared/db', () => ({
   db: {
     select: vi.fn(),
   },
 }));
 
-vi.mock('@/db/schema', () => ({
+vi.mock('@repo/shared/db/schema', () => ({
   subscriptions: { userId: 'user_id' },
 }));
 
@@ -20,7 +20,7 @@ vi.mock('drizzle-orm', () => ({
 
 import { GET } from '@/app/api/portal/route';
 import { auth } from '@/lib/auth';
-import { db } from '@/db';
+import { db } from '@repo/shared/db';
 
 function makeRequest(): Request {
   return new Request('https://git.exposed/api/portal', { method: 'GET' });

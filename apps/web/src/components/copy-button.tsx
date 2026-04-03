@@ -14,6 +14,7 @@ export function CopyButton({ text, label }: { text: string; label: string }) {
   return (
     <button
       onClick={handleCopy}
+      aria-label={copied ? 'Copied' : label}
       className="text-xs font-mono px-3 py-1.5 rounded border transition-colors cursor-pointer"
       style={{
         borderColor: copied ? '#16a34a' : '#334155',

@@ -23,7 +23,7 @@ export function FindingCard({ severity, title, description, file, line }: Findin
         <strong className="text-slate-200">{title}</strong>
       </div>
       <p className="text-sm text-slate-400 leading-relaxed">{description}</p>
-      <div className="text-xs text-slate-500 mt-2 font-mono">{file}{line ? `:${line}` : ''}</div>
+      <div className="text-xs text-slate-400 mt-2 font-mono">{file}{line ? `:${line}` : ''}</div>
     </div>
   );
 }

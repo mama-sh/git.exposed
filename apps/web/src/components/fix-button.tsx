@@ -97,6 +97,7 @@ export function FixButton({ scanId, findings, isPro }: Props) {
       <div className="flex items-center justify-between mb-3">
         <button
           onClick={selectAll}
+          aria-label="Select all findings"
           className="text-xs text-slate-400 hover:text-slate-200 transition-colors"
         >
           {selected.size === findings.length ? 'Deselect all' : 'Select all'}
@@ -104,6 +105,7 @@ export function FixButton({ scanId, findings, isPro }: Props) {
         <button
           onClick={handleFix}
           disabled={selected.size === 0 || status === 'loading' || status === 'polling'}
+          aria-label={`Fix ${selected.size} selected findings`}
           className="bg-red-600 hover:bg-red-500 disabled:bg-slate-700 disabled:text-slate-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
         >
           {status === 'loading' ? 'Creating fix...' :

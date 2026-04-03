@@ -65,7 +65,7 @@ export default function Home() {
         <p className="text-xl text-slate-400 mb-2">
           Find exposed secrets and vulnerabilities in any GitHub repo.
         </p>
-        <p className="text-sm text-slate-500 mb-10">
+        <p className="text-sm text-slate-400 mb-10">
           150+ secret patterns &middot; 3,000+ security rules &middot; Real CVE database
         </p>
 
@@ -76,11 +76,13 @@ export default function Home() {
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://github.com/owner/repo"
             required
+            aria-label="GitHub repository URL"
             className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
           />
           <button
             type="submit"
             disabled={loading}
+            aria-label="Scan repository"
             className="bg-red-600 hover:bg-red-700 disabled:bg-slate-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
           >
             {loading ? (
@@ -128,7 +130,7 @@ export default function Home() {
             <p className="text-amber-400 text-sm font-medium mb-1">
               Private repos need Pro to scan
             </p>
-            <p className="text-slate-500 text-xs mb-3">
+            <p className="text-slate-400 text-xs mb-3">
               Exposed credentials in private repos are the #1 cause of data breaches.
             </p>
             <a
@@ -140,7 +142,7 @@ export default function Home() {
           </div>
         )}
 
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-400">
           Free for public repos &middot; No signup required
           {scanCount !== null && (
             <span> &middot; {scanCount.toLocaleString()} repos scanned</span>

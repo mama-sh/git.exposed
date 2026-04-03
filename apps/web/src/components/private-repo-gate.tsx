@@ -34,7 +34,11 @@ export function PrivateRepoGate({ owner, repo, state }: PrivateRepoGateProps) {
 
       <div className="max-w-md mx-auto">
         <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-8">
-          <div className="text-4xl mb-4">🔒</div>
+          <div className="mb-4">
+            <svg className="w-10 h-10 text-slate-400 mx-auto" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </div>
 
           {state === 'sign-in' ? (
             <>

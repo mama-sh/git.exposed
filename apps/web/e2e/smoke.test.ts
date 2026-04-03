@@ -24,9 +24,10 @@ test.describe('git.exposed API smoke tests', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('checkout API requires authentication', async ({ request }) => {
-    const response = await request.get('/api/checkout');
-    expect(response.status()).toBe(401);
+  test('checkout GET redirects unauthenticated users to sign-in', async ({ request }) => {
+    const response = await request.get('/api/checkout', { maxRedirects: 0 });
+    // Should redirect to sign-in page
+    expect(response.status()).toBe(307);
   });
 
   test('report page is accessible', async ({ request }) => {

@@ -2,12 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { lemonSqueezySetup, createCheckout } from '@lemonsqueezy/lemonsqueezy.js';
 
-async function handleCheckout() {
-  const session = await auth();
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
+async function createCheckoutUrl(email: string, name: string | null | undefined, userId: string) {
   lemonSqueezySetup({ apiKey: process.env.LEMONSQUEEZY_API_KEY! });
 
   const storeId = process.env.LEMONSQUEEZY_STORE_ID!;
@@ -15,10 +10,10 @@ async function handleCheckout() {
 
   const checkout = await createCheckout(storeId, variantId, {
     checkoutData: {
-      email: session.user.email,
-      name: session.user.name ?? undefined,
+      email,
+      name: name ?? undefined,
       custom: {
-        user_id: session.user.id!,
+        user_id: userId,
       },
     },
     productOptions: {
@@ -26,22 +21,34 @@ async function handleCheckout() {
     },
   });
 
-  const url = checkout.data?.data.attributes.url;
+  return checkout.data?.data.attributes.url ?? null;
+}
+
+export async function GET(_req: NextRequest) {
+  const session = await auth();
+  if (!session?.user?.email) {
+    // Redirect to sign-in, then back to checkout after auth
+    return NextResponse.redirect(new URL('/api/auth/signin?callbackUrl=/api/checkout', _req.url));
+  }
+
+  const url = await createCheckoutUrl(session.user.email, session.user.name, session.user.id!);
   if (!url) {
     return NextResponse.json({ error: 'Failed to create checkout' }, { status: 500 });
   }
 
-  return { url };
-}
-
-export async function GET(_req: NextRequest) {
-  const result = await handleCheckout();
-  if (result instanceof NextResponse) return result;
-  return NextResponse.redirect(result.url);
+  return NextResponse.redirect(url);
 }
 
 export async function POST(_req: NextRequest) {
-  const result = await handleCheckout();
-  if (result instanceof NextResponse) return result;
-  return NextResponse.json({ url: result.url });
+  const session = await auth();
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const url = await createCheckoutUrl(session.user.email, session.user.name, session.user.id!);
+  if (!url) {
+    return NextResponse.json({ error: 'Failed to create checkout' }, { status: 500 });
+  }
+
+  return NextResponse.json({ url });
 }

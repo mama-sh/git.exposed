@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { Providers } from '@/components/providers';
+import { UserMenu } from '@/components/user-menu';
 import './globals.css';
 
 const geistSans = Geist({
@@ -33,7 +35,17 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <Providers>
+          <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4">
+            <a href="/" className="text-lg font-bold text-slate-200">
+              git.<span className="text-red-500">exposed</span>
+            </a>
+            <UserMenu />
+          </header>
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }

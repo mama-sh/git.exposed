@@ -25,12 +25,12 @@ export function parseGitHubUrl(url: string): RepoInfo | null {
 const MAX_REPO_SIZE = 100 * 1024 * 1024; // 100MB
 const FETCH_TIMEOUT = 30000; // 30s
 
-async function fetchAndExtract(url: string, dir: string): Promise<void> {
+async function fetchAndExtract(url: string, dir: string, headers?: Record<string, string>): Promise<void> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
 
   try {
-    const res = await fetch(url, { redirect: 'follow', signal: controller.signal });
+    const res = await fetch(url, { redirect: 'follow', signal: controller.signal, headers });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const contentLength = Number(res.headers.get('content-length') || 0);
@@ -49,16 +49,28 @@ async function fetchAndExtract(url: string, dir: string): Promise<void> {
   }
 }
 
-export async function downloadRepo(owner: string, repo: string): Promise<string> {
+export async function downloadRepo(owner: string, repo: string, accessToken?: string): Promise<string> {
   const dir = await mkdtemp(path.join(tmpdir(), 'gitexposed-'));
+  const headers: Record<string, string> = accessToken
+    ? { Authorization: `Bearer ${accessToken}`, Accept: 'application/vnd.github+json' }
+    : {};
+
+  // Authenticated requests use the GitHub API tarball endpoint
+  const baseUrl = accessToken
+    ? `https://api.github.com/repos/${owner}/${repo}/tarball`
+    : `https://github.com/${owner}/${repo}/archive/refs/heads`;
 
   try {
-    await fetchAndExtract(`https://github.com/${owner}/${repo}/archive/refs/heads/main.tar.gz`, dir);
+    const url = accessToken ? baseUrl : `${baseUrl}/main.tar.gz`;
+    await fetchAndExtract(url, dir, headers);
   } catch {
-    // Clean up partial extraction before retrying with master
     const entries = await readdir(dir);
     await Promise.all(entries.map((e) => rm(path.join(dir, e), { recursive: true, force: true })));
-    await fetchAndExtract(`https://github.com/${owner}/${repo}/archive/refs/heads/master.tar.gz`, dir);
+    if (accessToken) {
+      // API tarball uses default branch, so if it failed, just rethrow
+      throw new Error('Failed to download private repository');
+    }
+    await fetchAndExtract(`${baseUrl}/master.tar.gz`, dir, headers);
   }
 
   return dir;

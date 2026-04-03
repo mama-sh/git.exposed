@@ -8,6 +8,13 @@
       "when": 1775204386399,
       "tag": "0000_goofy_sally_floyd",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1775226556816,
+      "tag": "0001_abandoned_boom_boom",
+      "breakpoints": true
     }
   ]
 }

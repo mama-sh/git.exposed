@@ -7,13 +7,13 @@ import { allChecks } from './checks';
 import { calculateScore, getGrade } from './scoring';
 import { rm } from 'node:fs/promises';
 
-export async function runScan(scanId: string, owner: string, repo: string) {
+export async function runScan(scanId: string, owner: string, repo: string, accessToken?: string) {
   let dir: string | undefined;
 
   try {
     await db.update(scans).set({ status: 'scanning' }).where(eq(scans.id, scanId));
 
-    dir = await downloadRepo(owner, repo);
+    dir = await downloadRepo(owner, repo, accessToken);
     const result = await scan(dir, allChecks);
     const score = calculateScore(result.findings);
     const grade = getGrade(score);

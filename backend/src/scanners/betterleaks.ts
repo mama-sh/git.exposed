@@ -28,7 +28,7 @@ export function parseBetterleaksOutput(output: string): Finding[] {
   }
 }
 
-export function runBetterleaks(directory: string): Finding[] {
+export function runBetterleaks(directory: string): Promise<Finding[]> {
   return runCliScanner({
     command: `betterleaks detect --source="${directory}" --report-format=json --no-git`,
     timeout: 30000,

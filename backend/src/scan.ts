@@ -31,10 +31,12 @@ export async function runDeepScan(scanId: string, owner: string, repo: string) {
 
     dir = await downloadRepo(owner, repo);
 
-    // Scanners use execSync (blocking) — run sequentially, no fake parallelism
-    const secrets = runBetterleaks(dir);
-    const sast = runOpengrep(dir);
-    const deps = runTrivy(dir);
+    // Run all three scanners concurrently (async exec, non-blocking)
+    const [secrets, sast, deps] = await Promise.all([
+      runBetterleaks(dir),
+      runOpengrep(dir),
+      runTrivy(dir),
+    ]);
 
     const allFindings = [...secrets, ...sast, ...deps].map((f) => ({
       ...f,

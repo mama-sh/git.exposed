@@ -34,7 +34,7 @@ export function parseOpengrepOutput(output: string): Finding[] {
   }
 }
 
-export function runOpengrep(directory: string): Finding[] {
+export function runOpengrep(directory: string): Promise<Finding[]> {
   return runCliScanner({
     command: `opengrep scan --config auto --json "${directory}"`,
     parser: parseOpengrepOutput,

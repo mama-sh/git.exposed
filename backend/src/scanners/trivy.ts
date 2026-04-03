@@ -45,7 +45,7 @@ export function parseTrivyOutput(output: string): Finding[] {
   }
 }
 
-export function runTrivy(directory: string): Finding[] {
+export function runTrivy(directory: string): Promise<Finding[]> {
   return runCliScanner({
     command: `trivy fs --format json --scanners vuln,secret "${directory}"`,
     parser: parseTrivyOutput,

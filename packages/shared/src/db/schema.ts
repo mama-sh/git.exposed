@@ -85,3 +85,19 @@ export const findings = pgTable('findings', {
   file: text('file').notNull(),
   line: integer('line'),
 });
+
+// --- Fix jobs table (AI-generated PR tracking) ---
+
+export const fixStatusEnum = pgEnum('fix_status', ['pending', 'running', 'complete', 'failed']);
+
+export const fixJobs = pgTable('fix_jobs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  scanId: uuid('scan_id').notNull().references(() => scans.id),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  findingIds: text('finding_ids').notNull(),
+  status: fixStatusEnum('status').notNull().default('pending'),
+  prUrl: text('pr_url'),
+  error: text('error'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  completedAt: timestamp('completed_at'),
+});

@@ -1,8 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { db } from '@/db';
 import { scans } from '@/db/schema';
 import { parseGitHubUrl } from '@/scanner/github';
 import { runScan } from '@/scanner/run-scan';
+
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   const { url } = await request.json();
@@ -22,8 +24,9 @@ export async function POST(request: Request) {
     repoUrl: url,
   }).returning();
 
-  // Fire and forget — scan runs in background
-  runScan(scan.id, info.owner, info.repo).catch(console.error);
+  after(() => {
+    runScan(scan.id, info.owner, info.repo).catch(console.error);
+  });
 
   return NextResponse.json({
     id: scan.id,

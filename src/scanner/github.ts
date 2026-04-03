@@ -1,4 +1,4 @@
-import { mkdtemp } from 'node:fs/promises';
+import { mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
@@ -20,23 +20,25 @@ export function parseGitHubUrl(url: string): RepoInfo | null {
   }
 }
 
+async function fetchTarball(url: string): Promise<Buffer> {
+  const res = await fetch(url, { redirect: 'follow' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return Buffer.from(await res.arrayBuffer());
+}
+
 export async function downloadRepo(owner: string, repo: string): Promise<string> {
   const dir = await mkdtemp(path.join(tmpdir(), 'gitexposed-'));
-  const tarballUrl = `https://github.com/${owner}/${repo}/archive/refs/heads/main.tar.gz`;
+  const tarPath = path.join(dir, 'repo.tar.gz');
 
+  let buffer: Buffer;
   try {
-    execSync(
-      `curl -sL "${tarballUrl}" | tar xz --strip-components=1 -C "${dir}"`,
-      { timeout: 30000 },
-    );
+    buffer = await fetchTarball(`https://github.com/${owner}/${repo}/archive/refs/heads/main.tar.gz`);
   } catch {
-    // Try 'master' branch if 'main' fails
-    const masterUrl = `https://github.com/${owner}/${repo}/archive/refs/heads/master.tar.gz`;
-    execSync(
-      `curl -sL "${masterUrl}" | tar xz --strip-components=1 -C "${dir}"`,
-      { timeout: 30000 },
-    );
+    buffer = await fetchTarball(`https://github.com/${owner}/${repo}/archive/refs/heads/master.tar.gz`);
   }
+
+  await writeFile(tarPath, buffer);
+  execSync(`tar xzf "${tarPath}" --strip-components=1 -C "${dir}"`, { timeout: 15000 });
 
   return dir;
 }

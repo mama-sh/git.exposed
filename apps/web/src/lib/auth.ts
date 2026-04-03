@@ -4,8 +4,15 @@ import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import { getRealDb } from '@repo/shared/db';
 import { users, accounts, sessions, verificationTokens } from '@repo/shared/db/schema';
 
-// Lazy adapter — caches the real adapter after first access so Auth.js
-// gets a stable instance, but the DB connection is deferred past build time.
+// Known adapter method names that Auth.js checks for during initialization.
+// The Proxy reports these as existing without creating the adapter.
+const ADAPTER_METHODS = [
+  'createUser', 'getUser', 'getUserByEmail', 'getUserByAccount',
+  'updateUser', 'deleteUser', 'linkAccount', 'unlinkAccount',
+  'createSession', 'getSessionAndUser', 'updateSession', 'deleteSession',
+  'createVerificationToken', 'useVerificationToken',
+];
+
 let _adapter: ReturnType<typeof DrizzleAdapter> | undefined;
 function getAdapter() {
   if (!_adapter) {
@@ -26,8 +33,17 @@ function getAdapter() {
 
 const lazyAdapter = new Proxy({} as ReturnType<typeof DrizzleAdapter>, {
   get(_, prop) {
+    if (typeof prop === 'string' && ADAPTER_METHODS.includes(prop)) {
+      // Return a function that lazily creates the adapter and delegates
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (...args: any[]) => (getAdapter() as any)[prop](...args);
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (getAdapter() as any)[prop];
+  },
+  has(_, prop) {
+    if (typeof prop === 'string' && ADAPTER_METHODS.includes(prop)) return true;
+    return prop in getAdapter();
   },
 });
 

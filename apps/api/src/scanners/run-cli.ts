@@ -1,5 +1,5 @@
 import { exec } from 'node:child_process';
-import type { Finding } from './types';
+import type { Finding } from '@repo/shared/types';
 
 interface CliScannerOptions {
   command: string;

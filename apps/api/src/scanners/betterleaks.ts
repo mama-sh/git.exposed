@@ -1,4 +1,4 @@
-import type { Finding } from './types';
+import type { Finding } from '@repo/shared/types';
 import { runCliScanner } from './run-cli';
 
 interface BetterleaksResult {

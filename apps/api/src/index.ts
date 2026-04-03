@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { timingSafeEqual } from 'node:crypto';
+import { isValidRepoName } from '@repo/shared/validation';
 import { runDeepScan } from './scan';
 
 const SCAN_SECRET = process.env.SCAN_SECRET;
@@ -37,8 +38,7 @@ app.post('/scan', async (c) => {
   }
 
   // Validate owner/repo format to prevent path traversal
-  const validName = /^[\w.-]+$/;
-  if (!validName.test(owner) || !validName.test(repo)) {
+  if (!isValidRepoName(owner) || !isValidRepoName(repo)) {
     return c.json({ error: 'Invalid owner or repo name' }, 400);
   }
 

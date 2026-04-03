@@ -36,7 +36,11 @@ export async function runDeepScan(scanId: string, owner: string, repo: string) {
     const sast = runOpengrep(dir);
     const deps = runTrivy(dir);
 
-    const allFindings = [...secrets, ...sast, ...deps];
+    const allFindings = [...secrets, ...sast, ...deps].map((f) => ({
+      ...f,
+      // Strip temp directory prefix — show repo-relative paths
+      file: f.file.startsWith(dir) ? f.file.slice(dir.length + 1) : f.file,
+    }));
     const score = calculateScore(allFindings);
     const grade = getGrade(score);
 

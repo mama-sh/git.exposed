@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import { db } from '@/db';
 import { scans } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, and, desc, gt } from 'drizzle-orm';
 import { parseGitHubUrl } from '@/scanner/github';
 import { runScan } from '@/scanner/run-scan';
+import { rateLimit } from '@/lib/rate-limit';
 
 export const maxDuration = 60;
 
@@ -11,6 +13,17 @@ const SCANNER_URL = process.env.SCANNER_BACKEND_URL;
 const SCAN_SECRET = process.env.SCAN_SECRET || '';
 
 export async function POST(request: Request) {
+  // Rate limit: 5 scans per minute per IP
+  const headersList = await headers();
+  const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+  const { allowed, remaining } = rateLimit(ip, 5, 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Too many scans. Please wait a minute.' },
+      { status: 429, headers: { 'Retry-After': '60', 'X-RateLimit-Remaining': '0' } },
+    );
+  }
+
   let body: { url?: string };
   try {
     body = await request.json();
@@ -26,6 +39,29 @@ export async function POST(request: Request) {
   const info = parseGitHubUrl(url);
   if (!info) {
     return NextResponse.json({ error: 'Invalid GitHub URL' }, { status: 400 });
+  }
+
+  // Deduplication: return recent scan if same repo scanned in last 5 minutes
+  const fiveMinAgo = new Date(Date.now() - 5 * 60_000);
+  const [recent] = await db.select().from(scans)
+    .where(and(
+      eq(scans.repoOwner, info.owner),
+      eq(scans.repoName, info.repo),
+      eq(scans.status, 'complete'),
+      gt(scans.createdAt, fiveMinAgo),
+    ))
+    .orderBy(desc(scans.createdAt)).limit(1);
+
+  if (recent) {
+    return NextResponse.json({
+      id: recent.id,
+      status: recent.status,
+      score: recent.score,
+      grade: recent.grade,
+      findingsCount: recent.findingsCount,
+      reportUrl: `/${info.owner}/${info.repo}`,
+      cached: true,
+    }, { headers: { 'X-RateLimit-Remaining': String(remaining) } });
   }
 
   const [scan] = await db.insert(scans).values({

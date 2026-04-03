@@ -101,3 +101,14 @@ export const fixJobs = pgTable('fix_jobs', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   completedAt: timestamp('completed_at'),
 });
+
+// --- Monitored repos table (webhook tracking for continuous monitoring) ---
+
+export const monitoredRepos = pgTable('monitored_repos', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  repoOwner: text('repo_owner').notNull(),
+  repoName: text('repo_name').notNull(),
+  webhookId: integer('webhook_id').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});

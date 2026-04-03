@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const SCAN_PHASES = [
   'Connecting to GitHub',
@@ -80,12 +81,12 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6 mb-6">
             <p className="text-red-400 text-sm">{error}</p>
           </div>
-          <a
+          <Link
             href="/"
             className="text-red-500 hover:text-red-400 font-semibold text-sm"
           >
             &larr; Scan a different repo
-          </a>
+          </Link>
         </div>
       ) : (
         <div className="max-w-sm mx-auto">

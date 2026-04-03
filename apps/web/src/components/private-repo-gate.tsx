@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 
 interface PrivateRepoGateProps {
   owner: string;
@@ -101,9 +102,9 @@ export function PrivateRepoGate({ owner, repo, state }: PrivateRepoGateProps) {
         </div>
 
         <div className="mt-6">
-          <a href="/" className="text-red-500 hover:text-red-400 font-semibold text-sm">
+          <Link href="/" className="text-red-500 hover:text-red-400 font-semibold text-sm">
             &larr; Scan a public repo for free
-          </a>
+          </Link>
         </div>
       </div>
     </div>

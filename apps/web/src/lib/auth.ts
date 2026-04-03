@@ -7,12 +7,19 @@ import { users, accounts, sessions, verificationTokens } from '@repo/shared/db/s
 // Lazy adapter — defers DB connection until first auth call (not build time)
 const lazyAdapter = new Proxy({} as ReturnType<typeof DrizzleAdapter>, {
   get(_, prop) {
-    const real = DrizzleAdapter(getRealDb() as any, {
-      usersTable: users,
-      accountsTable: accounts,
-      sessionsTable: sessions,
-      verificationTokensTable: verificationTokens,
-    } as any);
+    const real = DrizzleAdapter(
+      // DrizzleAdapter types don't match neon-http driver exactly — safe to cast
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      getRealDb() as any,
+      {
+        usersTable: users,
+        accountsTable: accounts,
+        sessionsTable: sessions,
+        verificationTokensTable: verificationTokens,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
+    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (real as any)[prop];
   },
 });

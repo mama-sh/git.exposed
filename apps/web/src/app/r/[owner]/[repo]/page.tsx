@@ -2,6 +2,7 @@ import { db } from '@repo/shared/db';
 import { scans, findings, accounts, subscriptions } from '@repo/shared/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { ScoreCircle } from '@/components/score-circle';
 import { FindingCard } from '@/components/finding-card';
 import { CopyButton } from '@/components/copy-button';
@@ -191,9 +192,9 @@ export default async function ReportPage({ params }: Props) {
         </div>
 
         <div className="text-center mt-8">
-          <a href="/" className="text-red-500 hover:text-red-400 font-semibold text-sm">
+          <Link href="/" className="text-red-500 hover:text-red-400 font-semibold text-sm">
             Scan another repo &rarr;
-          </a>
+          </Link>
         </div>
 
         <footer className="text-center text-slate-600 text-xs mt-10 pt-6 border-t border-slate-800">

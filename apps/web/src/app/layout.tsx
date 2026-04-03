@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from '@/components/providers';
 import { UserMenu } from '@/components/user-menu';
@@ -38,9 +39,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans antialiased">
         <Providers>
           <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4">
-            <a href="/" className="text-lg font-bold text-slate-200">
+            <Link href="/" className="text-lg font-bold text-slate-200">
               git.<span className="text-red-500">exposed</span>
-            </a>
+            </Link>
             <UserMenu />
           </header>
           {children}

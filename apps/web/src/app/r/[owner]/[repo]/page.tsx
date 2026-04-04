@@ -49,6 +49,14 @@ function PageShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+function CenteredShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-dvh bg-background text-slate-200 flex items-center justify-center px-6">
+      {children}
+    </div>
+  );
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { owner, repo } = await params;
   const [scan] = await db.select().from(scans)
@@ -96,7 +104,7 @@ export default async function ReportPage({ params }: Props) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return <PageShell><PrivateRepoGate owner={owner} repo={repo} state="sign-in" /></PageShell>;
+      return <CenteredShell><PrivateRepoGate owner={owner} repo={repo} state="sign-in" /></CenteredShell>;
     }
 
     // User is signed in — verify with their GitHub token
@@ -119,7 +127,7 @@ export default async function ReportPage({ params }: Props) {
         if (sub) {
           return <PageShell><AutoScan owner={owner} repo={repo} /></PageShell>;
         }
-        return <PageShell><PrivateRepoGate owner={owner} repo={repo} state="upgrade" /></PageShell>;
+        return <CenteredShell><PrivateRepoGate owner={owner} repo={repo} state="upgrade" /></CenteredShell>;
       }
     }
 

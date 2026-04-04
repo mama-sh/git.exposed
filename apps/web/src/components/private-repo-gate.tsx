@@ -96,7 +96,7 @@ export function PrivateRepoGate({ owner, repo, state }: PrivateRepoGateProps) {
                 disabled={checkoutLoading}
                 className="w-full bg-green-600 hover:bg-green-500 disabled:bg-slate-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
               >
-                {checkoutLoading ? 'Redirecting…' : 'Upgrade to Pro — $19/mo'}
+                {checkoutLoading ? 'Redirecting…' : 'Upgrade to Pro - $19/mo'}
               </button>
               <p className="text-slate-600 text-xs mt-4">
                 Less than $0.63/day · Cancel anytime

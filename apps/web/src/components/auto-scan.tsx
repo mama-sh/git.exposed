@@ -136,7 +136,7 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
 
           {scanComplete ? (
             <p className="text-green-500 text-sm font-medium animate-pulse">
-              Scan complete — loading results…
+              Scan complete - loading results…
             </p>
           ) : (
             <p className="text-slate-500 text-xs">

@@ -140,7 +140,7 @@ export default function Home() {
                 href="/api/checkout"
                 className="inline-block bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 active:scale-[0.97]"
               >
-                Upgrade to Pro — $19/mo
+                Upgrade to Pro - $19/mo
               </a>
             </div>
           )}

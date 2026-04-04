@@ -1,5 +1,5 @@
-import type { Finding } from '@repo/shared/types';
-import { runCliScanner } from './run-cli';
+import type { Finding } from "@repo/shared/types";
+import { runCliScanner } from "./run-cli";
 
 interface TrivyVuln {
   VulnerabilityID: string;
@@ -11,13 +11,18 @@ interface TrivyVuln {
   Description: string;
 }
 
-function mapSeverity(sev: string): Finding['severity'] {
+function mapSeverity(sev: string): Finding["severity"] {
   switch (sev.toUpperCase()) {
-    case 'CRITICAL': return 'critical';
-    case 'HIGH': return 'high';
-    case 'MEDIUM': return 'medium';
-    case 'LOW': return 'low';
-    default: return 'info';
+    case "CRITICAL":
+      return "critical";
+    case "HIGH":
+      return "high";
+    case "MEDIUM":
+      return "medium";
+    case "LOW":
+      return "low";
+    default:
+      return "info";
   }
 }
 
@@ -28,11 +33,13 @@ export function parseTrivyOutput(output: string): Finding[] {
     const findings: Finding[] = [];
     for (const result of results) {
       for (const vuln of result.Vulnerabilities || []) {
-        const fix = vuln.FixedVersion ? ` Upgrade to ${vuln.FixedVersion}.` : '';
+        const fix = vuln.FixedVersion
+          ? ` Upgrade to ${vuln.FixedVersion}.`
+          : "";
         findings.push({
-          checkName: 'trivy',
+          checkName: "trivy",
           severity: mapSeverity(vuln.Severity),
-          title: `${vuln.PkgName} — ${vuln.VulnerabilityID}`,
+          title: `${vuln.PkgName} - ${vuln.VulnerabilityID}`,
           description: `${vuln.Title}.${fix}`,
           file: result.Target,
           line: undefined,

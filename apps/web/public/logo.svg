@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Shield body -->
+  <path d="M256 28L60 132v148c0 106.7 83.5 206.3 196 224 112.5-17.7 196-117.3 196-224V132L256 28z" fill="#1E293B" stroke="#475569" stroke-width="12"/>
+  <!-- Inner shield highlight -->
+  <path d="M256 60L88 148v132c0 92.5 72 178.5 168 194 96-15.5 168-101.5 168-194V148L256 60z" fill="#0F172A"/>
+  <!-- Scan eye — outer ring -->
+  <circle cx="256" cy="256" r="88" stroke="#EF4444" stroke-width="10" fill="none"/>
+  <!-- Scan eye — inner dot -->
+  <circle cx="256" cy="256" r="28" fill="#EF4444"/>
+  <!-- Scan crosshair lines -->
+  <line x1="256" y1="148" x2="256" y2="196" stroke="#EF4444" stroke-width="6" stroke-linecap="round"/>
+  <line x1="256" y1="316" x2="256" y2="364" stroke="#EF4444" stroke-width="6" stroke-linecap="round"/>
+  <line x1="148" y1="256" x2="196" y2="256" stroke="#EF4444" stroke-width="6" stroke-linecap="round"/>
+  <line x1="316" y1="256" x2="364" y2="256" stroke="#EF4444" stroke-width="6" stroke-linecap="round"/>
+</svg>

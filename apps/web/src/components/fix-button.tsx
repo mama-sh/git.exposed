@@ -83,9 +83,9 @@ export function FixButton({ scanId, findings, isPro }: Props) {
     return (
       <div className="mt-6 p-5 rounded-lg border border-amber-500/20 bg-amber-500/5 text-center">
         <p className="text-sm text-slate-300 font-medium mb-1">Fix all {findings.length} issues with one click</p>
-        <p className="text-xs text-slate-500 mb-3">AI generates a PR with fixes — you just review and merge.</p>
+        <p className="text-xs text-slate-500 mb-3">AI generates a PR with fixes - you just review and merge.</p>
         <a href="/api/checkout" className="inline-block bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-sm px-4 py-2 rounded-lg transition-colors">
-          Upgrade to Pro — $19/mo
+          Upgrade to Pro - $19/mo
         </a>
         <p className="text-[0.65rem] text-slate-600 mt-2">Less than $0.63/day &middot; Cancel anytime</p>
       </div>

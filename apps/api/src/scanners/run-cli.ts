@@ -26,7 +26,8 @@ export async function runCliScanner({ command, timeout = 60000, maxBuffer = 20 *
   try {
     const output = await execAsync(command, { timeout, maxBuffer });
     return parser(output);
-  } catch {
+  } catch (error) {
+    console.error(`[scanner] Command failed: ${command.split(' ')[0]}`, error instanceof Error ? error.message : error);
     return [];
   }
 }

@@ -74,6 +74,7 @@ export async function POST(request: Request) {
   }).returning();
 
   if (SCANNER_URL) {
+    console.log(`[web] Delegating scan to backend: ${SCANNER_URL}/scan for ${info.owner}/${info.repo}`);
     try {
       const res = await fetch(`${SCANNER_URL}/scan`, {
         method: 'POST',
@@ -84,15 +85,18 @@ export async function POST(request: Request) {
         body: JSON.stringify({ scanId: scan.id, owner: info.owner, repo: info.repo }),
       });
       if (!res.ok) throw new Error(`Scanner returned ${res.status}`);
+      console.log(`[web] Backend scan complete for ${info.owner}/${info.repo}`);
     } catch (error) {
-      console.error('Scanner backend error, falling back to built-in:', error);
+      console.error('[web] Scanner backend error, falling back to built-in:', error);
       await runScan(scan.id, info.owner, info.repo);
     }
   } else {
+    console.log(`[web] No SCANNER_BACKEND_URL — using built-in scanner for ${info.owner}/${info.repo}`);
     await runScan(scan.id, info.owner, info.repo);
   }
 
   const [result] = await db.select().from(scans).where(eq(scans.id, scan.id));
+  console.log(`[web] Scan result: ${info.owner}/${info.repo} — status=${result.status}, findings=${result.findingsCount}, score=${result.score}, grade=${result.grade}`);
 
   return NextResponse.json({
     id: scan.id,

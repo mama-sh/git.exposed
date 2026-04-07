@@ -83,11 +83,11 @@ export function FixButton({ scanId, findings, isPro }: Props) {
     return (
       <div className="mt-6 p-5 rounded-lg border border-amber-500/20 bg-amber-500/5 text-center">
         <p className="text-sm text-slate-300 font-medium mb-1">Fix all {findings.length} issues with one click</p>
-        <p className="text-xs text-slate-500 mb-3">AI generates a PR with fixes - you just review and merge.</p>
+        <p className="text-xs text-slate-400 mb-3">AI generates a PR with fixes - you just review and merge.</p>
         <a href="/api/checkout" className="inline-block bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-sm px-4 py-2 rounded-lg transition-colors">
           Upgrade to Pro - $19/mo
         </a>
-        <p className="text-[0.65rem] text-slate-600 mt-2">Less than $0.63/day &middot; Cancel anytime</p>
+        <p className="text-[0.65rem] text-slate-400 mt-2">Less than $0.63/day &middot; Cancel anytime</p>
       </div>
     );
   }
@@ -106,7 +106,7 @@ export function FixButton({ scanId, findings, isPro }: Props) {
           onClick={handleFix}
           disabled={selected.size === 0 || status === 'loading' || status === 'polling'}
           aria-label={`Fix ${selected.size} selected findings`}
-          className="bg-green-700 hover:bg-green-600 disabled:bg-slate-700 disabled:text-slate-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+          className="bg-green-700 hover:bg-green-600 disabled:bg-slate-700 disabled:text-slate-400 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
         >
           {status === 'loading' ? 'Creating fix...' :
            status === 'polling' ? 'Generating PR...' :
@@ -128,7 +128,7 @@ export function FixButton({ scanId, findings, isPro }: Props) {
             />
             <div className="flex-1 min-w-0">
               <span className="text-sm text-slate-200">{f.title}</span>
-              <span className="text-xs text-slate-500 block mt-0.5 font-mono truncate">{f.file}</span>
+              <span className="text-xs text-slate-400 block mt-0.5 font-mono truncate">{f.file}</span>
             </div>
             <span className={`text-[0.6rem] font-bold uppercase px-1.5 py-0.5 rounded ${
               f.severity === 'critical' ? 'bg-red-700' :

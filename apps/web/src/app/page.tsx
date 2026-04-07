@@ -102,12 +102,12 @@ export default function Home() {
 
           {/* Quick-start examples */}
           <div className="flex gap-3 flex-wrap mb-6">
-            <span className="text-xs text-slate-500">Try:</span>
+            <span className="text-xs text-slate-400">Try:</span>
             {['expressjs/express', 'facebook/react', 'vercel/next.js'].map((repo) => (
               <button
                 key={repo}
                 onClick={() => setUrl(`https://github.com/${repo}`)}
-                className="text-xs text-slate-500 hover:text-green-400 transition-colors duration-150 font-mono active:scale-[0.97]"
+                className="text-xs text-slate-400 hover:text-green-400 transition-colors duration-150 font-mono active:scale-[0.97]"
               >
                 {repo}
               </button>
@@ -162,7 +162,7 @@ export default function Home() {
                 <div className="w-3 h-3 rounded-full bg-red-500/80" />
                 <div className="w-3 h-3 rounded-full bg-amber-500/80" />
                 <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                <span className="text-xs text-slate-500 ml-2 font-mono">scan results</span>
+                <span className="text-xs text-slate-400 ml-2 font-mono">scan results</span>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -180,7 +180,7 @@ export default function Home() {
               </div>
               <div className="mt-4 pt-3 border-t border-ds-border/30">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500">Score</span>
+                  <span className="text-xs text-slate-400">Score</span>
                   <span className="text-sm font-bold text-red-400 font-mono">F — 12/100</span>
                 </div>
               </div>

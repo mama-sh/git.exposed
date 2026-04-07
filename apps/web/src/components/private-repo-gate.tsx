@@ -61,7 +61,7 @@ export function PrivateRepoGate({ owner, repo, state }: PrivateRepoGateProps) {
                 </svg>
                 Sign in with GitHub
               </button>
-              <p className="text-slate-600 text-xs mt-4">
+              <p className="text-slate-400 text-xs mt-4">
                 We only request read access · Public repos are always free
               </p>
             </>
@@ -98,7 +98,7 @@ export function PrivateRepoGate({ owner, repo, state }: PrivateRepoGateProps) {
               >
                 {checkoutLoading ? 'Redirecting…' : 'Upgrade to Pro - $19/mo'}
               </button>
-              <p className="text-slate-600 text-xs mt-4">
+              <p className="text-slate-400 text-xs mt-4">
                 Less than $0.63/day · Cancel anytime
               </p>
             </>

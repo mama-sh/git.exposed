@@ -123,7 +123,7 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
                         ? 'text-slate-300'
                         : isCurrent
                           ? 'text-slate-200 font-medium'
-                          : 'text-slate-500'
+                          : 'text-slate-400'
                     }`}
                   >
                     {label}
@@ -139,7 +139,7 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
               Scan complete - loading results…
             </p>
           ) : (
-            <p className="text-slate-500 text-xs">
+            <p className="text-slate-400 text-xs">
               This usually takes 10–30 seconds
             </p>
           )}

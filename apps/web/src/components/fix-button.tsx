@@ -106,7 +106,7 @@ export function FixButton({ scanId, findings, isPro }: Props) {
           onClick={handleFix}
           disabled={selected.size === 0 || status === 'loading' || status === 'polling'}
           aria-label={`Fix ${selected.size} selected findings`}
-          className="bg-green-600 hover:bg-green-500 disabled:bg-slate-700 disabled:text-slate-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+          className="bg-green-700 hover:bg-green-600 disabled:bg-slate-700 disabled:text-slate-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
         >
           {status === 'loading' ? 'Creating fix...' :
            status === 'polling' ? 'Generating PR...' :
@@ -131,9 +131,9 @@ export function FixButton({ scanId, findings, isPro }: Props) {
               <span className="text-xs text-slate-500 block mt-0.5 font-mono truncate">{f.file}</span>
             </div>
             <span className={`text-[0.6rem] font-bold uppercase px-1.5 py-0.5 rounded ${
-              f.severity === 'critical' ? 'bg-red-600' :
-              f.severity === 'high' ? 'bg-orange-600' :
-              f.severity === 'medium' ? 'bg-yellow-600' : 'bg-blue-600'
+              f.severity === 'critical' ? 'bg-red-700' :
+              f.severity === 'high' ? 'bg-orange-700' :
+              f.severity === 'medium' ? 'bg-yellow-700' : 'bg-blue-700'
             } text-white`}>
               {f.severity}
             </span>

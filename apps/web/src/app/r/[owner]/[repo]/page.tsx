@@ -164,7 +164,7 @@ export default async function ReportPage({ params }: Props) {
           {(['critical', 'high', 'medium', 'low'] as const).map((sev) => {
             const count = scanFindings.filter((f) => f.severity === sev).length;
             if (count === 0) return null;
-            const colors: Record<string, string> = { critical: 'bg-red-600', high: 'bg-orange-600', medium: 'bg-yellow-600', low: 'bg-blue-600' };
+            const colors: Record<string, string> = { critical: 'bg-red-700', high: 'bg-orange-700', medium: 'bg-yellow-700', low: 'bg-blue-700' };
             return (
               <span key={sev} className={`${colors[sev]} text-white text-xs font-semibold px-3 py-1 rounded-full`}>
                 {count} {sev}

@@ -86,7 +86,7 @@ export default function Home() {
               type="submit"
               disabled={loading}
               aria-label="Scan repository"
-              className="bg-green-600 hover:bg-green-500 disabled:bg-slate-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 active:scale-[0.97] flex items-center gap-2 shadow-[0_4px_14px_rgba(34,197,94,0.25)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.35)]"
+              className="bg-green-700 hover:bg-green-600 disabled:bg-slate-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 active:scale-[0.97] flex items-center gap-2 shadow-[0_4px_14px_rgba(34,197,94,0.25)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.35)]"
             >
               {loading ? (
                 <>
@@ -181,7 +181,7 @@ export default function Home() {
               <div className="mt-4 pt-3 border-t border-ds-border/30">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-slate-500">Score</span>
-                  <span className="text-sm font-bold text-red-500 font-mono">F — 12/100</span>
+                  <span className="text-sm font-bold text-red-400 font-mono">F — 12/100</span>
                 </div>
               </div>
             </div>

@@ -1,5 +1,5 @@
 const SEV_COLORS: Record<string, string> = {
-  critical: '#dc2626', high: '#ea580c', medium: '#ca8a04', low: '#2563eb', info: '#6b7280',
+  critical: '#b91c1c', high: '#c2410c', medium: '#a16207', low: '#1d4ed8', info: '#6b7280',
 };
 
 interface FindingProps {

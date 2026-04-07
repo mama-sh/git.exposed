@@ -166,15 +166,15 @@ export default function Home() {
               </div>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-[0.6rem] font-bold uppercase px-1.5 py-0.5 rounded bg-red-600 text-white">critical</span>
+                  <span className="text-[0.6rem] font-bold uppercase px-1.5 py-0.5 rounded bg-red-700 text-white">critical</span>
                   <span className="text-sm text-slate-300">Hardcoded API key</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[0.6rem] font-bold uppercase px-1.5 py-0.5 rounded bg-orange-600 text-white">high</span>
+                  <span className="text-[0.6rem] font-bold uppercase px-1.5 py-0.5 rounded bg-orange-700 text-white">high</span>
                   <span className="text-sm text-slate-300">SQL injection risk</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[0.6rem] font-bold uppercase px-1.5 py-0.5 rounded bg-yellow-600 text-white">medium</span>
+                  <span className="text-[0.6rem] font-bold uppercase px-1.5 py-0.5 rounded bg-yellow-700 text-white">medium</span>
                   <span className="text-sm text-slate-300">Outdated dependency</span>
                 </div>
               </div>

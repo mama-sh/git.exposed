@@ -1,9 +1,13 @@
 import { db } from '@repo/shared/db';
 import { scans } from '@repo/shared/db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 
 const GRADE_COLORS: Record<string, string> = {
-  A: '#16a34a', B: '#65a30d', C: '#ca8a04', D: '#ea580c', F: '#dc2626',
+  A: '#16a34a',
+  B: '#65a30d',
+  C: '#ca8a04',
+  D: '#ea580c',
+  F: '#dc2626',
 };
 
 function makeBadge(label: string, value: string, color: string): string {
@@ -31,9 +35,12 @@ function makeBadge(label: string, value: string, color: string): string {
 export async function GET(_: Request, { params }: { params: Promise<{ owner: string; repo: string }> }) {
   const { owner, repo } = await params;
 
-  const [scan] = await db.select().from(scans)
+  const [scan] = await db
+    .select()
+    .from(scans)
     .where(and(eq(scans.repoOwner, owner), eq(scans.repoName, repo), eq(scans.status, 'complete')))
-    .orderBy(desc(scans.createdAt)).limit(1);
+    .orderBy(desc(scans.createdAt))
+    .limit(1);
 
   let value: string;
   let color: string;

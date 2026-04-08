@@ -10,10 +10,14 @@ interface OpengrepResult {
 
 function mapSeverity(sev: string): Finding['severity'] {
   switch (sev.toUpperCase()) {
-    case 'ERROR': return 'critical';
-    case 'WARNING': return 'medium';
-    case 'INFO': return 'info';
-    default: return 'medium';
+    case 'ERROR':
+      return 'critical';
+    case 'WARNING':
+      return 'medium';
+    case 'INFO':
+      return 'info';
+    default:
+      return 'medium';
   }
 }
 

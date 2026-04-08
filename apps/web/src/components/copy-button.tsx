@@ -13,6 +13,7 @@ export function CopyButton({ text, label }: { text: string; label: string }) {
 
   return (
     <button
+      type="button"
       onClick={handleCopy}
       aria-label={copied ? 'Copied' : label}
       className="text-xs font-mono px-3 py-1.5 rounded border transition-colors cursor-pointer"

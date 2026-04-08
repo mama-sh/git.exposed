@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { parseGitHubUrl, downloadRepo } from '@repo/shared/github';
 import { existsSync } from 'node:fs';
 import { rm } from 'node:fs/promises';
+import { downloadRepo, parseGitHubUrl } from '@repo/shared/github';
+import { describe, expect, it } from 'vitest';
 
 describe('parseGitHubUrl', () => {
   it('parses full GitHub URL', () => {

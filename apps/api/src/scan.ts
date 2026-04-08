@@ -1,13 +1,12 @@
+import { rm } from 'node:fs/promises';
 import { db } from '@repo/shared/db';
-import { scans, findings as findingsTable } from '@repo/shared/db/schema';
-import { eq } from 'drizzle-orm';
+import { findings as findingsTable, scans } from '@repo/shared/db/schema';
 import { downloadRepo } from '@repo/shared/github';
 import { calculateScore, getGrade } from '@repo/shared/scoring';
+import { eq } from 'drizzle-orm';
 import { runBetterleaks } from './scanners/betterleaks';
 import { runOpengrep } from './scanners/opengrep';
 import { runTrivy } from './scanners/trivy';
-import { rm } from 'node:fs/promises';
-import type { Finding } from '@repo/shared/types';
 
 export async function runDeepScan(scanId: string, owner: string, repo: string) {
   let dir: string | undefined;
@@ -21,15 +20,24 @@ export async function runDeepScan(scanId: string, owner: string, repo: string) {
 
     // Run all three scanners concurrently (async exec, non-blocking)
     const [secrets, sast, deps] = await Promise.all([
-      runBetterleaks(dir).then(r => { console.log(`[scan] Betterleaks: ${r.length} findings`); return r; }),
-      runOpengrep(dir).then(r => { console.log(`[scan] OpenGrep: ${r.length} findings`); return r; }),
-      runTrivy(dir).then(r => { console.log(`[scan] Trivy: ${r.length} findings`); return r; }),
+      runBetterleaks(dir).then((r) => {
+        console.log(`[scan] Betterleaks: ${r.length} findings`);
+        return r;
+      }),
+      runOpengrep(dir).then((r) => {
+        console.log(`[scan] OpenGrep: ${r.length} findings`);
+        return r;
+      }),
+      runTrivy(dir).then((r) => {
+        console.log(`[scan] Trivy: ${r.length} findings`);
+        return r;
+      }),
     ]);
 
     const allFindings = [...secrets, ...sast, ...deps].map((f) => ({
       ...f,
       // Strip temp directory prefix — show repo-relative paths
-      file: f.file.startsWith(dir!) ? f.file.slice(dir!.length + 1) : f.file,
+      file: f.file.startsWith(dir!) ? f.file.slice(dir?.length + 1) : f.file,
     }));
     const score = calculateScore(allFindings);
     const grade = getGrade(score);
@@ -50,13 +58,16 @@ export async function runDeepScan(scanId: string, owner: string, repo: string) {
 
     console.log(`[scan] Complete: ${owner}/${repo} — ${allFindings.length} findings, score=${score}, grade=${grade}`);
 
-    await db.update(scans).set({
-      status: 'complete',
-      score,
-      grade,
-      findingsCount: allFindings.length,
-      completedAt: new Date(),
-    }).where(eq(scans.id, scanId));
+    await db
+      .update(scans)
+      .set({
+        status: 'complete',
+        score,
+        grade,
+        findingsCount: allFindings.length,
+        completedAt: new Date(),
+      })
+      .where(eq(scans.id, scanId));
   } catch (error) {
     console.error(`[scan] FAILED: ${owner}/${repo} —`, error instanceof Error ? error.message : 'Unknown error');
     await db.update(scans).set({ status: 'failed' }).where(eq(scans.id, scanId));

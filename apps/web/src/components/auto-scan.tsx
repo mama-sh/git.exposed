@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { Download, GitBranch, Package, ScanSearch, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
-import { GitBranch, Download, ScanSearch, Package, ShieldCheck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const SCAN_PHASES = [
@@ -42,9 +42,7 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
   useEffect(() => {
     if (scanComplete || error) return;
     const timer = setInterval(() => {
-      setCurrentPhase((prev) =>
-        prev >= SCAN_PHASES.length - 1 ? prev : prev + 1,
-      );
+      setCurrentPhase((prev) => (prev >= SCAN_PHASES.length - 1 ? prev : prev + 1));
     }, PHASE_INTERVAL);
     return () => clearInterval(timer);
   }, [scanComplete, error]);
@@ -114,18 +112,18 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
     })();
   }, [owner, repo, onComplete]);
 
-  const progress = scanComplete
-    ? 100
-    : Math.min(95, (currentPhase / SCAN_PHASES.length) * 85 + 10);
+  const progress = scanComplete ? 100 : Math.min(95, (currentPhase / SCAN_PHASES.length) * 85 + 10);
 
   return (
     <div className="text-center pt-8">
       {/* Repo identifier */}
       <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-ds-border/30 bg-ds-muted/40 mb-10">
-        <svg className="w-4 h-4 text-slate-400" viewBox="0 0 16 16" fill="currentColor">
+        <svg className="w-4 h-4 text-slate-400" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
           <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z" />
         </svg>
-        <span className="text-sm text-slate-300 font-mono">{owner}/{repo}</span>
+        <span className="text-sm text-slate-300 font-mono">
+          {owner}/{repo}
+        </span>
       </div>
 
       {error ? (
@@ -137,10 +135,7 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
             <p className="text-red-400 text-sm mb-1 font-medium">Scan failed</p>
             <p className="text-slate-400 text-sm">{error}</p>
           </div>
-          <Link
-            href="/"
-            className="text-red-500 hover:text-red-400 font-semibold text-sm transition-colors"
-          >
+          <Link href="/" className="text-red-500 hover:text-red-400 font-semibold text-sm transition-colors">
             &larr; Try a different repo
           </Link>
         </div>
@@ -150,21 +145,38 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
           <div className="relative mb-10">
             <div className="relative w-32 h-32 mx-auto">
               {/* Outer ring — rotating */}
-              <svg className="absolute inset-0 w-full h-full animate-[spin_8s_linear_infinite]" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" className="text-ds-border/20" strokeWidth="1" strokeDasharray="4 6" />
+              <svg
+                className="absolute inset-0 w-full h-full animate-[spin_8s_linear_infinite]"
+                viewBox="0 0 100 100"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="46"
+                  fill="none"
+                  stroke="currentColor"
+                  className="text-ds-border/20"
+                  strokeWidth="1"
+                  strokeDasharray="4 6"
+                />
               </svg>
 
               {/* Progress ring */}
-              <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+              <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
                 <circle
-                  cx="50" cy="50" r="40"
+                  cx="50"
+                  cy="50"
+                  r="40"
                   fill="none"
                   stroke="currentColor"
                   className="text-ds-border/10"
                   strokeWidth="2"
                 />
                 <circle
-                  cx="50" cy="50" r="40"
+                  cx="50"
+                  cy="50"
+                  r="40"
                   fill="none"
                   stroke="url(#scan-gradient)"
                   strokeWidth="2"
@@ -183,7 +195,14 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
               {/* Center content */}
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 {scanComplete ? (
-                  <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg
+                    className="w-10 h-10 text-green-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 ) : (
@@ -213,7 +232,14 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
                 >
                   <span className="w-6 h-6 flex items-center justify-center shrink-0">
                     {isComplete ? (
-                      <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <svg
+                        className="w-4 h-4 text-green-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                        aria-hidden="true"
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     ) : isCurrent ? (
@@ -225,7 +251,12 @@ export function AutoScan({ owner, repo }: AutoScanProps) {
                       <span className="w-1.5 h-1.5 rounded-full bg-slate-600" />
                     )}
                   </span>
-                  <phase.icon className={cn('w-3.5 h-3.5 shrink-0', isCurrent ? 'text-red-400' : isComplete ? 'text-green-500/60' : 'text-slate-600')} />
+                  <phase.icon
+                    className={cn(
+                      'w-3.5 h-3.5 shrink-0',
+                      isCurrent ? 'text-red-400' : isComplete ? 'text-green-500/60' : 'text-slate-600',
+                    )}
+                  />
                   <span
                     className={cn(
                       'text-sm',

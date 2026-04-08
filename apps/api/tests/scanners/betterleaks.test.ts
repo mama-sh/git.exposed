@@ -1,17 +1,17 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { parseBetterleaksOutput } from '../../src/scanners/betterleaks';
 
 const SAMPLE_OUTPUT = JSON.stringify({
   results: [
     {
-      Description: "AWS Access Key",
-      File: "config.js",
+      Description: 'AWS Access Key',
+      File: 'config.js',
       StartLine: 3,
-      Secret: "AKIAIOSFODNN7EXAMPLE",
-      Match: "AKIAIOSFODNN7EXAMPLE",
-      RuleID: "aws-access-key"
-    }
-  ]
+      Secret: 'AKIAIOSFODNN7EXAMPLE',
+      Match: 'AKIAIOSFODNN7EXAMPLE',
+      RuleID: 'aws-access-key',
+    },
+  ],
 });
 
 describe('parseBetterleaksOutput', () => {

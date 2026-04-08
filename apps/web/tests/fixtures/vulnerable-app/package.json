@@ -1,1 +1,6 @@
-{ "name": "vulnerable-app", "dependencies": { "lodash": "4.17.20" } }
+{
+  "name": "vulnerable-app",
+  "dependencies": {
+    "lodash": "4.17.20"
+  }
+}

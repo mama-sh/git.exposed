@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, integer, timestamp, pgEnum } from 'drizzle-orm/pg-core';
+import { integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // --- Scan tables ---
 
@@ -21,7 +21,9 @@ export const scans = pgTable('scans', {
 
 export const findings = pgTable('findings', {
   id: uuid('id').defaultRandom().primaryKey(),
-  scanId: uuid('scan_id').notNull().references(() => scans.id),
+  scanId: uuid('scan_id')
+    .notNull()
+    .references(() => scans.id),
   checkName: text('check_name').notNull(),
   severity: severityEnum('severity').notNull(),
   title: text('title').notNull(),

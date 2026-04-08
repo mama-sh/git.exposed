@@ -23,6 +23,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Biome
+        run: npx @biomejs/biome check .
+
       - name: Typecheck
         run: pnpm turbo typecheck
 

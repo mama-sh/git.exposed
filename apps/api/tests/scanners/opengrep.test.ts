@@ -1,15 +1,19 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { parseOpengrepOutput } from '../../src/scanners/opengrep';
 
 const SAMPLE_OUTPUT = JSON.stringify({
   results: [
     {
-      check_id: "javascript.lang.security.detect-eval-with-expression",
-      path: "app.js",
+      check_id: 'javascript.lang.security.detect-eval-with-expression',
+      path: 'app.js',
       start: { line: 5, col: 1 },
-      extra: { message: "Detected eval() with a non-literal argument.", severity: "ERROR", metadata: { confidence: "HIGH" } }
-    }
-  ]
+      extra: {
+        message: 'Detected eval() with a non-literal argument.',
+        severity: 'ERROR',
+        metadata: { confidence: 'HIGH' },
+      },
+    },
+  ],
 });
 
 describe('parseOpengrepOutput', () => {
@@ -23,7 +27,16 @@ describe('parseOpengrepOutput', () => {
   });
 
   it('maps WARNING to medium', () => {
-    const warn = JSON.stringify({ results: [{ check_id: "test", path: "a.js", start: { line: 1 }, extra: { message: "test", severity: "WARNING", metadata: {} } }] });
+    const warn = JSON.stringify({
+      results: [
+        {
+          check_id: 'test',
+          path: 'a.js',
+          start: { line: 1 },
+          extra: { message: 'test', severity: 'WARNING', metadata: {} },
+        },
+      ],
+    });
     expect(parseOpengrepOutput(warn)[0].severity).toBe('medium');
   });
 

@@ -1,6 +1,6 @@
 import type { Check } from '@repo/shared/types';
+import { dependenciesCheck } from './dependencies';
 import { secretsCheck } from './secrets';
 import { securityCheck } from './security';
-import { dependenciesCheck } from './dependencies';
 
 export const allChecks: Check[] = [secretsCheck, securityCheck, dependenciesCheck];

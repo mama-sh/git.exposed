@@ -65,12 +65,8 @@
           "name": "findings_scan_id_scans_id_fk",
           "tableFrom": "findings",
           "tableTo": "scans",
-          "columnsFrom": [
-            "scan_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["scan_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -165,34 +161,17 @@
     "public.grade": {
       "name": "grade",
       "schema": "public",
-      "values": [
-        "A",
-        "B",
-        "C",
-        "D",
-        "F"
-      ]
+      "values": ["A", "B", "C", "D", "F"]
     },
     "public.scan_status": {
       "name": "scan_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "scanning",
-        "complete",
-        "failed"
-      ]
+      "values": ["pending", "scanning", "complete", "failed"]
     },
     "public.severity": {
       "name": "severity",
       "schema": "public",
-      "values": [
-        "critical",
-        "high",
-        "medium",
-        "low",
-        "info"
-      ]
+      "values": ["critical", "high", "medium", "low", "info"]
     }
   },
   "schemas": {},

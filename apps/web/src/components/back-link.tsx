@@ -1,13 +1,14 @@
 'use client';
 
-import { startTransition, addTransitionType } from 'react';
 import { useRouter } from 'next/navigation';
+import { addTransitionType, startTransition } from 'react';
 
 export function BackLink() {
   const router = useRouter();
 
   return (
     <button
+      type="button"
       onClick={() => {
         startTransition(() => {
           addTransitionType('nav-back');

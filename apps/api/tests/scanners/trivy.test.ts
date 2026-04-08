@@ -1,23 +1,23 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { parseTrivyOutput } from '../../src/scanners/trivy';
 
 const SAMPLE_OUTPUT = JSON.stringify({
   Results: [
     {
-      Target: "package-lock.json",
+      Target: 'package-lock.json',
       Vulnerabilities: [
         {
-          VulnerabilityID: "CVE-2021-44228",
-          PkgName: "lodash",
-          InstalledVersion: "4.17.20",
-          FixedVersion: "4.17.21",
-          Severity: "CRITICAL",
-          Title: "Prototype Pollution in lodash",
-          Description: "Lodash versions prior to 4.17.21 are vulnerable."
-        }
-      ]
-    }
-  ]
+          VulnerabilityID: 'CVE-2021-44228',
+          PkgName: 'lodash',
+          InstalledVersion: '4.17.20',
+          FixedVersion: '4.17.21',
+          Severity: 'CRITICAL',
+          Title: 'Prototype Pollution in lodash',
+          Description: 'Lodash versions prior to 4.17.21 are vulnerable.',
+        },
+      ],
+    },
+  ],
 });
 
 describe('parseTrivyOutput', () => {
@@ -31,7 +31,23 @@ describe('parseTrivyOutput', () => {
   });
 
   it('maps LOW severity correctly', () => {
-    const low = JSON.stringify({ Results: [{ Target: "a", Vulnerabilities: [{ VulnerabilityID: "X", PkgName: "a", InstalledVersion: "1", Severity: "LOW", Title: "t", Description: "d" }] }] });
+    const low = JSON.stringify({
+      Results: [
+        {
+          Target: 'a',
+          Vulnerabilities: [
+            {
+              VulnerabilityID: 'X',
+              PkgName: 'a',
+              InstalledVersion: '1',
+              Severity: 'LOW',
+              Title: 't',
+              Description: 'd',
+            },
+          ],
+        },
+      ],
+    });
     expect(parseTrivyOutput(low)[0].severity).toBe('low');
   });
 
@@ -40,6 +56,6 @@ describe('parseTrivyOutput', () => {
   });
 
   it('handles null Vulnerabilities', () => {
-    expect(parseTrivyOutput(JSON.stringify({ Results: [{ Target: "a", Vulnerabilities: null }] }))).toHaveLength(0);
+    expect(parseTrivyOutput(JSON.stringify({ Results: [{ Target: 'a', Vulnerabilities: null }] }))).toHaveLength(0);
   });
 });

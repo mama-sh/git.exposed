@@ -1,7 +1,7 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@repo/shared"],
+  transpilePackages: ['@repo/shared'],
   experimental: { viewTransition: true },
   // Poll for file changes every 300ms so Turbopack picks up files
   // written by the external fswatch watcher (FSEvents alone is unreliable
@@ -17,7 +17,8 @@ const nextConfig: NextConfig = {
       },
       // Also handle GitHub-style deep paths: owner/repo/tree/main/src → owner/repo
       {
-        source: '/:owner((?!api|badge|r|_next|opengraph-image|twitter-image|favicon)\\w[\\w.-]*)/:repo([\\w.-]+)/:rest*',
+        source:
+          '/:owner((?!api|badge|r|_next|opengraph-image|twitter-image|favicon)\\w[\\w.-]*)/:repo([\\w.-]+)/:rest*',
         destination: '/r/:owner/:repo',
       },
     ];

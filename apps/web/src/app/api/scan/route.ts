@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import { db } from '@repo/shared/db';
 import { scans } from '@repo/shared/db/schema';
-import { eq, and, desc, gt } from 'drizzle-orm';
 import { parseGitHubUrl } from '@repo/shared/github';
 import { isValidRepoName } from '@repo/shared/validation';
-import { runScan } from '@/scanner/run-scan';
+import { and, desc, eq, gt } from 'drizzle-orm';
+import { headers } from 'next/headers';
+import { NextResponse } from 'next/server';
 import { rateLimit } from '@/lib/rate-limit';
+import { runScan } from '@/scanner/run-scan';
 
 export const maxDuration = 60;
 
@@ -46,32 +46,43 @@ export async function POST(request: Request) {
   }
 
   const fiveMinAgo = new Date(Date.now() - 5 * 60_000);
-  const [recent] = await db.select().from(scans)
-    .where(and(
-      eq(scans.repoOwner, info.owner),
-      eq(scans.repoName, info.repo),
-      eq(scans.status, 'complete'),
-      gt(scans.createdAt, fiveMinAgo),
-    ))
-    .orderBy(desc(scans.createdAt)).limit(1);
+  const [recent] = await db
+    .select()
+    .from(scans)
+    .where(
+      and(
+        eq(scans.repoOwner, info.owner),
+        eq(scans.repoName, info.repo),
+        eq(scans.status, 'complete'),
+        gt(scans.createdAt, fiveMinAgo),
+      ),
+    )
+    .orderBy(desc(scans.createdAt))
+    .limit(1);
 
   if (recent) {
-    return NextResponse.json({
-      id: recent.id,
-      status: recent.status,
-      score: recent.score,
-      grade: recent.grade,
-      findingsCount: recent.findingsCount,
-      reportUrl: `/${info.owner}/${info.repo}`,
-      cached: true,
-    }, { headers: { 'X-RateLimit-Remaining': String(remaining) } });
+    return NextResponse.json(
+      {
+        id: recent.id,
+        status: recent.status,
+        score: recent.score,
+        grade: recent.grade,
+        findingsCount: recent.findingsCount,
+        reportUrl: `/${info.owner}/${info.repo}`,
+        cached: true,
+      },
+      { headers: { 'X-RateLimit-Remaining': String(remaining) } },
+    );
   }
 
-  const [scan] = await db.insert(scans).values({
-    repoOwner: info.owner,
-    repoName: info.repo,
-    repoUrl: `https://github.com/${info.owner}/${info.repo}`,
-  }).returning();
+  const [scan] = await db
+    .insert(scans)
+    .values({
+      repoOwner: info.owner,
+      repoName: info.repo,
+      repoUrl: `https://github.com/${info.owner}/${info.repo}`,
+    })
+    .returning();
 
   if (SCANNER_URL) {
     console.log(`[web] Delegating scan to backend: ${SCANNER_URL}/scan for ${info.owner}/${info.repo}`);
@@ -80,7 +91,7 @@ export async function POST(request: Request) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SCAN_SECRET}`,
+          Authorization: `Bearer ${SCAN_SECRET}`,
         },
         body: JSON.stringify({ scanId: scan.id, owner: info.owner, repo: info.repo }),
       });

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('security headers and input validation', () => {
   test('scan API rejects path traversal attempts', async ({ request }) => {

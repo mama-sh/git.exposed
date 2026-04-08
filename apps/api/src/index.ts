@@ -1,8 +1,8 @@
+import { timingSafeEqual } from 'node:crypto';
 import { serve } from '@hono/node-server';
+import { isValidRepoName } from '@repo/shared/validation';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { timingSafeEqual } from 'node:crypto';
-import { isValidRepoName } from '@repo/shared/validation';
 import { runDeepScan } from './scan';
 
 const SCAN_SECRET = process.env.SCAN_SECRET;

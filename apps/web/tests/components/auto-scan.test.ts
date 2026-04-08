@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('AutoScan API contract', () => {
   beforeEach(() => {
@@ -18,10 +18,13 @@ describe('AutoScan API contract', () => {
       body: JSON.stringify({ url: 'https://github.com/facebook/react' }),
     });
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/scan', expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ url: 'https://github.com/facebook/react' }),
-    }));
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/scan',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ url: 'https://github.com/facebook/react' }),
+      }),
+    );
   });
 
   it('handles failed scan status', async () => {

@@ -22,7 +22,12 @@ function execAsync(command: string, options: { timeout: number; maxBuffer: numbe
   });
 }
 
-export async function runCliScanner({ command, timeout = 60000, maxBuffer = 20 * 1024 * 1024, parser }: CliScannerOptions): Promise<Finding[]> {
+export async function runCliScanner({
+  command,
+  timeout = 60000,
+  maxBuffer = 20 * 1024 * 1024,
+  parser,
+}: CliScannerOptions): Promise<Finding[]> {
   try {
     const output = await execAsync(command, { timeout, maxBuffer });
     return parser(output);

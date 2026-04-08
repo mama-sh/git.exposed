@@ -1,5 +1,9 @@
 const SEV_COLORS: Record<string, string> = {
-  critical: '#b91c1c', high: '#c2410c', medium: '#a16207', low: '#1d4ed8', info: '#6b7280',
+  critical: '#b91c1c',
+  high: '#c2410c',
+  medium: '#a16207',
+  low: '#1d4ed8',
+  info: '#6b7280',
 };
 
 interface FindingProps {
@@ -12,7 +16,10 @@ interface FindingProps {
 
 export function FindingCard({ severity, title, description, file, line }: FindingProps) {
   return (
-    <div className="bg-ds-muted rounded-lg p-4 border border-ds-border/30 border-l-[3px]" style={{ borderLeftColor: SEV_COLORS[severity] }}>
+    <div
+      className="bg-ds-muted rounded-lg p-4 border border-ds-border/30 border-l-[3px]"
+      style={{ borderLeftColor: SEV_COLORS[severity] }}
+    >
       <div className="flex items-center gap-2 mb-2">
         <span
           className="text-[0.65rem] font-bold uppercase px-2 py-0.5 rounded text-white"
@@ -23,7 +30,10 @@ export function FindingCard({ severity, title, description, file, line }: Findin
         <strong className="text-slate-200">{title}</strong>
       </div>
       <p className="text-sm text-slate-400 leading-relaxed">{description}</p>
-      <div className="text-xs text-slate-400 mt-2 font-mono">{file}{line ? `:${line}` : ''}</div>
+      <div className="text-xs text-slate-400 mt-2 font-mono">
+        {file}
+        {line ? `:${line}` : ''}
+      </div>
     </div>
   );
 }

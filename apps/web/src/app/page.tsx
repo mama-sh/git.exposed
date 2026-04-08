@@ -50,10 +50,7 @@ export default function Home() {
 
   // Score counter: counts 100 → 12 when phase reaches 5
   useEffect(() => {
-    if (animPhase < 5) {
-      setDisplayScore(100);
-      return;
-    }
+    if (animPhase < 5) return;
     let val = 100;
     const id = setInterval(() => {
       val -= 4;
@@ -63,7 +60,10 @@ export default function Home() {
       }
       setDisplayScore(val);
     }, 18);
-    return () => clearInterval(id);
+    return () => {
+      clearInterval(id);
+      setDisplayScore(100);
+    };
   }, [animPhase]);
 
   function handleScan(e: React.FormEvent) {

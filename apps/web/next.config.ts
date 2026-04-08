@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@repo/shared"],
+  experimental: { viewTransition: true },
+  // Poll for file changes every 300ms so Turbopack picks up files
+  // written by the external fswatch watcher (FSEvents alone is unreliable
+  // for files modified by an external process like cp).
+  watchOptions: { pollIntervalMs: 300 },
   async rewrites() {
     return [
       // git.exposed/owner/repo → internal /r/owner/repo

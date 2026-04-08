@@ -17,6 +17,7 @@
       "persistent": true
     },
     "test": {},
-    "lint": {}
+    "lint": {},
+    "typecheck": {}
   }
 }

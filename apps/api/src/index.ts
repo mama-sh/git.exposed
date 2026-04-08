@@ -41,9 +41,10 @@ app.post('/scan', async (c) => {
     return c.json({ error: 'Invalid owner or repo name' }, 400);
   }
 
-  await runDeepScan(scanId, owner, repo);
+  // Fire-and-forget — scan runs in background, frontend polls for status
+  runDeepScan(scanId, owner, repo).catch(() => {});
 
-  return c.json({ status: 'complete' });
+  return c.json({ status: 'accepted', scanId });
 });
 
 const port = Number(process.env.PORT) || 4000;

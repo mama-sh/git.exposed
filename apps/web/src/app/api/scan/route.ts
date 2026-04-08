@@ -85,7 +85,7 @@ export async function POST(request: Request) {
         body: JSON.stringify({ scanId: scan.id, owner: info.owner, repo: info.repo }),
       });
       if (!res.ok) throw new Error(`Scanner returned ${res.status}`);
-      console.log(`[web] Backend scan complete for ${info.owner}/${info.repo}`);
+      console.log(`[web] Backend accepted scan for ${info.owner}/${info.repo}`);
     } catch (error) {
       console.error('[web] Scanner backend error, falling back to built-in:', error);
       await runScan(scan.id, info.owner, info.repo);
@@ -95,15 +95,10 @@ export async function POST(request: Request) {
     await runScan(scan.id, info.owner, info.repo);
   }
 
-  const [result] = await db.select().from(scans).where(eq(scans.id, scan.id));
-  console.log(`[web] Scan result: ${info.owner}/${info.repo} — status=${result.status}, findings=${result.findingsCount}, score=${result.score}, grade=${result.grade}`);
-
+  // Return immediately — scan may still be running in the backend
   return NextResponse.json({
     id: scan.id,
-    status: result.status,
-    score: result.score,
-    grade: result.grade,
-    findingsCount: result.findingsCount,
+    status: 'scanning',
     reportUrl: `/${info.owner}/${info.repo}`,
   });
 }

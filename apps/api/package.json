@@ -7,7 +7,8 @@
     "build": "echo 'no build step — tsx runs source directly'",
     "start": "npx tsx src/index.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.12",

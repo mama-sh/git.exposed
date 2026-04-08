@@ -37,7 +37,7 @@ export async function runDeepScan(scanId: string, owner: string, repo: string) {
     const allFindings = [...secrets, ...sast, ...deps].map((f) => ({
       ...f,
       // Strip temp directory prefix — show repo-relative paths
-      file: f.file.startsWith(dir!) ? f.file.slice(dir?.length + 1) : f.file,
+      file: f.file.startsWith(dir!) ? f.file.slice(dir!.length + 1) : f.file,
     }));
     const score = calculateScore(allFindings);
     const grade = getGrade(score);

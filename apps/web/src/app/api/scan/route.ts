@@ -2,7 +2,7 @@ import { db } from '@repo/shared/db';
 import { scans } from '@repo/shared/db/schema';
 import { parseGitHubUrl } from '@repo/shared/github';
 import { isValidRepoName } from '@repo/shared/validation';
-import { and, desc, eq, gt, lt } from 'drizzle-orm';
+import { and, desc, eq, gt, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { rateLimit } from '@/lib/rate-limit';
@@ -75,7 +75,6 @@ export async function POST(request: Request) {
     );
   }
 
-  const stuckCutoff = new Date(Date.now() - 10 * 60_000);
   await db
     .update(scans)
     .set({ status: 'failed' })
@@ -84,7 +83,7 @@ export async function POST(request: Request) {
         eq(scans.repoOwner, info.owner),
         eq(scans.repoName, info.repo),
         eq(scans.status, 'scanning'),
-        lt(scans.createdAt, stuckCutoff),
+        sql`${scans.createdAt} < now() - interval '10 minutes'`,
       ),
     );
 

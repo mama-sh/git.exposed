@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid owner or repo name' }, { status: 400 });
   }
 
-  const fiveMinAgo = new Date(Date.now() - 5 * 60_000);
+  const cacheCutoff = new Date(Date.now() - 24 * 60 * 60_000);
   const [recent] = await db
     .select()
     .from(scans)
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         eq(scans.repoOwner, info.owner),
         eq(scans.repoName, info.repo),
         eq(scans.status, 'complete'),
-        gt(scans.createdAt, fiveMinAgo),
+        gt(scans.createdAt, cacheCutoff),
       ),
     )
     .orderBy(desc(scans.createdAt))

@@ -2,23 +2,25 @@
 
 Next.js App Router frontend for git.exposed. Deployed to Vercel.
 
+> All `pnpm db:*` scripts below live in `apps/web/package.json`. Run them from `apps/web` (or invoke via `pnpm --filter @repo/web <script>` from repo root).
+
 ## Local development
 
 Needs a Postgres instance. The simplest path:
 
 ```bash
-# From repo root
+# From repo root — start a local Postgres container
 docker run --name gitexposed-pg -e POSTGRES_USER=gitexposed -e POSTGRES_PASSWORD=gitexposed \
   -e POSTGRES_DB=gitexposed -p 5433:5432 -d postgres:17
 
-# In apps/web/.env
+# Point apps/web at it
 echo "DATABASE_URL=postgresql://gitexposed:gitexposed@localhost:5433/gitexposed" >> apps/web/.env
 
 # Apply schema
-pnpm db:migrate
+pnpm --filter @repo/web db:migrate
 ```
 
-Then `pnpm dev` from repo root.
+Then `pnpm turbo dev` from repo root.
 
 ## Database migrations
 
@@ -26,10 +28,10 @@ Migration files live in `apps/web/drizzle/` and are tracked by `drizzle-kit` in 
 
 ### Workflow
 
-1. Change the schema in `packages/shared/src/db/schema-core.ts` (or `schema.ts` for pro-only tables).
+1. Change the schema in `packages/shared/src/db/schema-core.ts`.
 2. Generate a migration file:
    ```bash
-   pnpm db:generate --name=<short_description>
+   pnpm --filter @repo/web db:generate --name=<short_description>
    ```
 3. Commit both the schema change and the generated `*.sql` + `meta/*.json` files.
 4. Apply to the target database (see below).
@@ -37,23 +39,26 @@ Migration files live in `apps/web/drizzle/` and are tracked by `drizzle-kit` in 
 ### Applying to local dev
 
 ```bash
-pnpm db:migrate
+pnpm --filter @repo/web db:migrate
 ```
 
 Uses `apps/web/.env`'s `DATABASE_URL`.
 
 ### Applying to production
 
-`drizzle-kit migrate` needs the **prod** `DATABASE_URL`. The safest pattern is to pull it from your host and run the migrator with Node's native `--env-file` flag so the var never ends up in a committed file:
+`drizzle-kit migrate` needs the **prod** `DATABASE_URL`. The safest pattern is to pull it from your host and run the migrator with an explicit env file so the var never ends up in a committed file:
 
 ```bash
-# From apps/web:
+cd apps/web
 vercel env pull .env.production.local --environment=production
 node --env-file=.env.production.local node_modules/.bin/drizzle-kit migrate
 rm .env.production.local
 ```
 
 `.env*.local` is gitignored. The migrator is idempotent — re-running it is a no-op once the latest migration is recorded in `__drizzle_migrations`.
+
+> `node --env-file=` requires Node 20.6+. On older Node 20.x, use a dotenv runner instead:
+> `pnpm dlx dotenv-cli -e .env.production.local -- drizzle-kit migrate`
 
 ### If `__drizzle_migrations` is out of sync
 

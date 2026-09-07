@@ -1135,7 +1135,7 @@ git push
 
 **Step 5: Update Vercel project settings**
 
-In Vercel dashboard for `davidstrouks-projects/git-exposed`:
+In the Vercel dashboard for the `git-exposed` project:
 - Set **Root Directory** to `apps/web`
 - Set **Install Command** to `cd ../.. && pnpm install`
 - Set **Build Command** to `cd ../.. && pnpm turbo build --filter=@repo/web`
